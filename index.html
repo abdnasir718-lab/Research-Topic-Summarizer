@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Topic Summarizer | Global Research Trends</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <span class="logo-icon">&#128300;</span>
+                    <span class="logo-text">Global Research Trends</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <h1 class="hero-title">Research Topic Summarizer</h1>
+                <p class="hero-subtitle">Enter a research topic and get instant insights with key trends powered by AI</p>
+            </section>
+
+            <section class="search-section">
+                <form class="search-form" id="searchForm">
+                    <div class="input-wrapper">
+                        <input
+                            type="text"
+                            id="topicInput"
+                            class="search-input"
+                            placeholder="Enter a research topic (e.g., climate change in agriculture)"
+                            required
+                        >
+                        <button type="submit" class="search-btn" id="searchBtn">
+                            <span class="btn-text">Summarize</span>
+                            <span class="spinner hidden"></span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="results-section hidden" id="resultsSection">
+                <div class="results-header">
+                    <h2 class="results-title">Summary</h2>
+                    <button class="copy-btn" id="copyBtn">
+                        <span class="copy-icon">&#128203;</span>
+                        <span class="copy-text">Copy</span>
+                    </button>
+                </div>
+                <div class="results-content">
+                    <div class="summary-card">
+                        <h3 class="card-label">Overview</h3>
+                        <p class="summary-text" id="summaryText"></p>
+                    </div>
+                    <div class="trends-card">
+                        <h3 class="card-label">Key Trends</h3>
+                        <ul class="trends-list" id="trendsList"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="error-section hidden" id="errorSection">
+                <div class="error-card">
+                    <span class="error-icon">&#9888;</span>
+                    <p class="error-text" id="errorText"></p>
+                    <button class="retry-btn" id="retryBtn">Try Again</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-text">&copy; 2026 Global Research Trends. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
