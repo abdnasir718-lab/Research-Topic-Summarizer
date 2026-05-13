@@ -1,4 +1,4 @@
-const { GEMINI_API_KEY } = process.env;
+    const { GEMINI_API_KEY } = process.env;
 
 const allowedOrigins = [
     'http://localhost:3000',
@@ -8,7 +8,9 @@ const allowedOrigins = [
 ];
 
 function getOrigin(origin) {
-    if (!origin || allowedOrigins.includes(origin)) return origin || '*';
+    if (!origin) return '*';
+    if (allowedOrigins.includes(origin)) return origin;
+    if (origin.endsWith('.vercel.app')) return origin;
     return allowedOrigins[0];
 }
 
