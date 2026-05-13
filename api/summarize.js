@@ -7,17 +7,23 @@ module.exports = async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    const body = await new Promise(resolve => {
-        let data = '';
-        req.on('data', chunk => data += chunk);
-        req.on('end', () => resolve(data));
-    });
+    let body;
+    try {
+        body = await new Promise(resolve => {
+            let d = '';
+            req.on('data', c => d += c);
+            req.on('end', () => resolve(d));
+        });
+    } catch {
+        body = '';
+    }
+
     let parsed;
-    try { parsed = JSON.parse(body); } catch { parsed = {}; }
+    try { parsed = JSON.parse(body || '{}'); } catch { parsed = {}; }
 
     const topic = parsed?.topic;
     if (!topic || typeof topic !== 'string') {
-        return res.status(400).json({ error: 'Topic is required' });
+        return res.status(400).json({ error: 'Topic is required', received: body, parsed });
     }
 
     const { GEMINI_API_KEY } = process.env;
