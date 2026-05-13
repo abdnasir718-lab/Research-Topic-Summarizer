@@ -1,26 +1,26 @@
-    const { GEMINI_API_KEY } = process.env;
-
 module.exports = async function handler(req, res) {
     const origin = req.headers.origin;
-
     res.setHeader('Access-Control-Allow-Origin', origin || '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+    const body = await new Promise(resolve => {
+        let data = '';
+        req.on('data', chunk => data += chunk);
+        req.on('end', () => resolve(data));
+    });
+    let parsed;
+    try { parsed = JSON.parse(body); } catch { parsed = {}; }
 
-    const { topic } = req.body;
-
+    const topic = parsed?.topic;
     if (!topic || typeof topic !== 'string') {
         return res.status(400).json({ error: 'Topic is required' });
     }
 
+    const { GEMINI_API_KEY } = process.env;
     if (!GEMINI_API_KEY) {
         return res.status(500).json({ error: 'API key not configured' });
     }
@@ -46,22 +46,15 @@ Be specific, data-driven, and focus on recent developments (last 2-3 years). Use
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: prompt }]
-                }],
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 800,
-                }
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
             }),
         });
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
             console.error('Gemini API error:', response.status, errorData);
-            return res.status(response.status).json({
-                error: 'Failed to generate summary. Please try again.'
-            });
+            return res.status(response.status).json({ error: 'Failed to generate summary. Please try again.' });
         }
 
         const data = await response.json();
