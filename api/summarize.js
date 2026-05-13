@@ -53,8 +53,11 @@ Be specific, data-driven, and focus on recent developments (last 2-3 years). Use
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            console.error('Gemini API error:', response.status, errorData);
-            return res.status(response.status).json({ error: 'Failed to generate summary. Please try again.' });
+            console.error('Gemini API error:', response.status, JSON.stringify(errorData));
+            return res.status(response.status).json({
+                error: 'Failed to generate summary. Please try again.',
+                detail: errorData?.error?.message || 'Unknown Gemini error'
+            });
         }
 
         const data = await response.json();
