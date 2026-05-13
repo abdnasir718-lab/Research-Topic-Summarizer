@@ -1,3 +1,11 @@
 {
-    "version": 2
+    "version": 2,
+    "functions": {
+        "api/summarize.js": {
+            "runtime": "nodejs@24.x"
+        }
+    },
+    "rewrites": [
+        { "source": "/api/(.*)", "destination": "/api/$1" }
+    ]
 }

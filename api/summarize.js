@@ -1,23 +1,9 @@
     const { GEMINI_API_KEY } = process.env;
 
-const allowedOrigins = [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'https://global-research-trends.vercel.app',
-];
+module.exports = async function handler(req, res) {
+    const origin = req.headers.origin;
 
-function getOrigin(origin) {
-    if (!origin) return '*';
-    if (allowedOrigins.includes(origin)) return origin;
-    if (origin.endsWith('.vercel.app')) return origin;
-    return allowedOrigins[0];
-}
-
-export default async function handler(req, res) {
-    const origin = getOrigin(req.headers.origin);
-
-    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -58,14 +44,10 @@ Be specific, data-driven, and focus on recent developments (last 2-3 years). Use
 
         const response = await fetch(apiUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
+                    parts: [{ text: prompt }]
                 }],
                 generationConfig: {
                     temperature: 0.7,
@@ -83,7 +65,6 @@ Be specific, data-driven, and focus on recent developments (last 2-3 years). Use
         }
 
         const data = await response.json();
-
         return res.status(200).json(data);
     } catch (error) {
         console.error('Server error:', error);
